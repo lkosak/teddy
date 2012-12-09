@@ -1,0 +1,37 @@
+{
+  "author": "Lou Kosak",
+  "name": "TEDder",
+  "description": "Fun Times TED talks browser",
+  "version": "0.0.1",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  },
+  "scripts": {
+    "start": "brunch watch --server",
+    "test": "brunch test",
+    "postinstall": "brunch build --minify"
+  },
+  "dependencies": {
+    "statik": ">= 1.1.0",
+    "brunch": ">= 1.0 < 1.5",
+    "javascript-brunch": ">= 1.0 < 1.5",
+    "coffee-script-brunch": ">= 1.0 < 1.5",
+
+    "css-brunch": ">= 1.0 < 1.5",
+    "stylus-brunch": ">= 1.0 < 1.5",
+
+    "handlebars-brunch": ">= 1.0 < 1.5",
+
+    "uglify-js-brunch": ">= 1.0 < 1.5",
+    "clean-css-brunch": ">= 1.0 < 1.5",
+    "chai": "1.2.0",
+    "sinon": "1.4.2",
+    "sinon-chai": "2.1.2"
+  }
+}

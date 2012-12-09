@@ -1,0 +1,21 @@
+<article class="talk">
+  <header>
+    <h3 class="name">
+      <a href="{{url}}" target="_blank">{{name}}</a>
+    </h3>
+    <h4 class="speaker">{{speaker}}</h4>
+  </header>
+  <p>
+    {{description}}
+  </p>
+  <ul class="stats inline">
+    <li>{{duration}}</li>
+    <li>{{published_on}}</li>
+    <li>{{event}}</li>
+  </ul>
+  {{#if saved}}
+    <button class="btn disabled" rel="add">Saved</button>
+  {{else}}
+    <button class="btn rel="add">Save</button>
+  {{/if}}
+</article>
