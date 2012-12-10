@@ -160,7 +160,42 @@ window.require.define({"collections/talks": function(exports, require, module) {
 
     Talks.prototype.model = Talk;
 
-    Talks.prototype.url = "" + config.api.versionRoot + "/talks";
+    Talks.prototype.baseUrl = "" + config.api.versionRoot + "/talks";
+
+    Talks.prototype.offset = 0;
+
+    Talks.prototype.limit = 30;
+
+    Talks.prototype.url = function() {
+      return "" + this.baseUrl + "?offset=" + this.offset + "&limit=" + this.limit;
+    };
+
+    Talks.prototype.fetchNext = function(options) {
+      var _this = this;
+      if (options == null) {
+        options = {};
+      }
+      if (!this.fetching) {
+        this.fetching = true;
+        options = _.extend({}, options, {
+          add: true,
+          success: function() {
+            return setTimeout((function() {
+              return _this.fetching = false;
+            }), 1000);
+          }
+        });
+        return this.fetch(options);
+      }
+    };
+
+    Talks.prototype.add = function(models, options) {
+      Talks.__super__.add.call(this, models, options);
+      this.offset += models.length;
+      if (models.length < this.limit) {
+        return this.full = true;
+      }
+    };
 
     return Talks;
 
@@ -767,6 +802,10 @@ window.require.define({"lib/view_helper": function(exports, require, module) {
     context = mediator.user || {};
     return Handlebars.helpers["with"].call(this, context, options);
   });
+
+  Handlebars.registerHelper('date', function(date) {
+    return "" + (date.getMonth()) + "/" + (date.getDate()) + "/" + (date.getFullYear());
+  });
   
 }});
 
@@ -857,6 +896,11 @@ window.require.define({"models/talk": function(exports, require, module) {
     function Talk() {
       return Talk.__super__.constructor.apply(this, arguments);
     }
+
+    Talk.prototype.parse = function(response) {
+      response.published_on = new Date(response.published_on);
+      return response;
+    };
 
     return Talk;
 
@@ -1243,6 +1287,22 @@ window.require.define({"views/talks_view": function(exports, require, module) {
 
     TalksView.prototype.autoRender = true;
 
+    TalksView.prototype.initialize = function() {
+      TalksView.__super__.initialize.apply(this, arguments);
+      return this.setupInfiniteScrolling();
+    };
+
+    TalksView.prototype.setupInfiniteScrolling = function() {
+      var _this = this;
+      return $(window).scroll(_.throttle(function() {
+        var toBottom;
+        toBottom = $('body').height() - ($(window).scrollTop() + $(window).height());
+        if (toBottom < 500) {
+          return _this.collection.fetchNext();
+        }
+      }, 300));
+    };
+
     return TalksView;
 
   })(CollectionView);
@@ -1295,7 +1355,7 @@ window.require.define({"views/templates/login": function(exports, require, modul
 window.require.define({"views/templates/talk": function(exports, require, module) {
   module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
     helpers = helpers || Handlebars.helpers;
-    var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression, self=this;
+    var buffer = "", stack1, foundHelper, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
 
   function program1(depth0,data) {
     
@@ -1328,9 +1388,9 @@ window.require.define({"views/templates/talk": function(exports, require, module
     if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
     else { stack1 = depth0.duration; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
     buffer += escapeExpression(stack1) + "</li>\n    <li>";
-    foundHelper = helpers.published_on;
-    if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-    else { stack1 = depth0.published_on; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+    stack1 = depth0.published_on;
+    foundHelper = helpers.date;
+    stack1 = foundHelper ? foundHelper.call(depth0, stack1, {hash:{}}) : helperMissing.call(depth0, "date", stack1, {hash:{}});
     buffer += escapeExpression(stack1) + "</li>\n    <li>";
     foundHelper = helpers.event;
     if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }

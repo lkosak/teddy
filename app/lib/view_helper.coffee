@@ -37,3 +37,6 @@ Handlebars.registerHelper 'without', (context, options) ->
 Handlebars.registerHelper 'with_user', (options) ->
   context = mediator.user or {}
   Handlebars.helpers.with.call(this, context, options)
+
+Handlebars.registerHelper 'date', (date) ->
+  "#{date.getMonth()}/#{date.getDate()}/#{date.getFullYear()}"
