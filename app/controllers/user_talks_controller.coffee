@@ -15,6 +15,8 @@ module.exports = class UserTalksController extends Controller
 
   addTalk: (talk) ->
     @collection.create(id: talk.id, talk: talk)
+    talk.set 'saved', true
 
   removeTalk: (talk) ->
     @collection.where(id: talk.id)[0].destroy()
+    talk.set 'saved', false
