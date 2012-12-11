@@ -1355,7 +1355,7 @@ window.require.define({"views/templates/home": function(exports, require, module
     
 
 
-    return "<div class=\"row-fluid\">\n  <div class=\"span8\">\n    <div class=\"user-talks\">\n      <h4>Saved Talks</h4>\n      <div data-js=\"user-talks\"></div>\n    </div>\n  </div>\n</div>\n<br />\n<div class=\"row-fluid\">\n  <div class=\"span8\" data-js=\"talks\"></div>\n</div>\n";});
+    return "<div class=\"row-fluid\">\n  <div class=\"user-talks\">\n    <h4>Saved Talks</h4>\n    <div data-js=\"user-talks\"></div>\n  </div>\n</div>\n<br />\n<div class=\"row-fluid\">\n  <div data-js=\"talks\"></div>\n</div>\n";});
 }});
 
 window.require.define({"views/templates/login": function(exports, require, module) {
@@ -1398,7 +1398,8 @@ window.require.define({"views/templates/talk": function(exports, require, module
     foundHelper = helpers.description;
     if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
     else { stack1 = depth0.description; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-    buffer += escapeExpression(stack1) + "\n  </p>\n  <ul class=\"stats inline\">\n    <li>";
+    if(stack1 || stack1 === 0) { buffer += stack1; }
+    buffer += "\n  </p>\n  <ul class=\"stats inline\">\n    <li>";
     foundHelper = helpers.duration;
     if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
     else { stack1 = depth0.duration; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
